@@ -4,6 +4,7 @@ import {
   createTask,
   reorderTasks,
 } from "../services/taskApi";
+import { useAuth } from "../context/AuthContext";
 
 import type Task from "../interfaces/Task";
 import TaskForm from "../components/TaskForm";
@@ -19,6 +20,7 @@ import {
 } from "@hello-pangea/dnd";
 
 export default function TasksPage() {
+  const { user, logout } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [statusFilter, setStatusFilter] =
     useState<"all" | "pending" | "completed">("all");
@@ -89,6 +91,38 @@ export default function TasksPage() {
 
   return (
     <div className="container">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+          paddingBottom: "15px",
+          borderBottom: "1px solid #ddd",
+        }}
+      >
+        <div>
+          <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
+            Logged in as: <strong>{user?.email}</strong>
+          </p>
+        </div>
+        <button
+          onClick={logout}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#f44336",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+        >
+          Logout
+        </button>
+      </div>
+
       <TaskForm onAdd={addTask} />
 
       <div className="filters">

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Api.Data;
@@ -5,6 +6,7 @@ using TaskManager.Api.Models;
 
 namespace TaskManager.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class TasksController : ControllerBase
@@ -17,12 +19,14 @@ public class TasksController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetTasks()
         => Ok(await _context.Tasks
         .OrderBy(t => t.Order)
         .ToListAsync());
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateTask(TaskItem task)
     {
         if (!ModelState.IsValid)
@@ -37,6 +41,7 @@ public class TasksController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> UpdateTask(int id, TaskItem updated)
     {
         // ensure that the user updates the same TaskItem and it's valid
@@ -58,6 +63,7 @@ public class TasksController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> DeleteTask(int id)
     {
         var task = await _context.Tasks.FindAsync(id);

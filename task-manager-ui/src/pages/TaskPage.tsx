@@ -7,8 +7,15 @@ import {
 } from "../services/taskApi";
 
 import type Task from "../interfaces/Task";
-import TaskRow from "../components/TaskRow";
 import TaskForm from "../components/TaskForm";
+
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DraggableProvided,
+  type DropResult,
+} from "@hello-pangea/dnd";
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -29,12 +36,12 @@ export default function TasksPage() {
     await createTask({
       title,
       description,
-      isCompleted: false
+      isCompleted: false,
     });
     loadTasks();
   };
 
-  const filteredTasks = tasks.filter(task => {
+  const filteredTasks = tasks.filter((task) => {
     const matchesStatus =
       statusFilter === "all" ||
       (statusFilter === "completed" && task.isCompleted) ||
@@ -47,6 +54,17 @@ export default function TasksPage() {
     return matchesStatus && matchesSearch;
   });
 
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const newTasks = Array.from(filteredTasks);
+    const [movedTask] = newTasks.splice(result.source.index, 1);
+    newTasks.splice(result.destination.index, 0, movedTask);
+
+    setTasks(newTasks);
+    // TODO: update backend if you want to persist order
+  };
+
   return (
     <div className="container">
       <TaskForm onAdd={addTask} />
@@ -56,12 +74,12 @@ export default function TasksPage() {
           type="text"
           placeholder="Search tasks..."
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
         <select
           value={statusFilter}
-          onChange={e =>
+          onChange={(e) =>
             setStatusFilter(e.target.value as "all" | "pending" | "completed")
           }
         >
@@ -74,35 +92,73 @@ export default function TasksPage() {
       {filteredTasks.length === 0 && <p>No matching tasks.</p>}
 
       {filteredTasks.length > 0 && (
-        <table className="task-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="tasks">
+            {(provided) => (
+              <table
+                className="task-table"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
 
-          <tbody>
-            {filteredTasks.map(task => (
-              <TaskRow
-                key={task.id}
-                task={task}
-                onToggle={() =>
-                  updateTask({
-                    ...task,
-                    isCompleted: !task.isCompleted
-                  }).then(loadTasks)
-                }
-                onDelete={() =>
-                  deleteTask(task.id).then(loadTasks)
-                }
-              />
-            ))}
-          </tbody>
-        </table>
+                <tbody>
+                  {filteredTasks.map((task, index) => (
+                    <Draggable
+                      key={task.id}
+                      draggableId={task.id.toString()}
+                      index={index}
+                    >
+                      {(provided: DraggableProvided, snapshot) => (
+                        <tr
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            background: snapshot.isDragging ? "#f0f0f0" : "white",
+                          }}
+                        >
+                          <td>☰</td>
+                          <td>{index + 1}</td>
+                          <td>{task.title}</td>
+                          <td>{task.description}</td>
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={task.isCompleted}
+                              onChange={() =>
+                                updateTask({
+                                  ...task,
+                                  isCompleted: !task.isCompleted,
+                                }).then(loadTasks)
+                              }
+                            />
+                          </td>
+                          <td>
+                            <button onClick={() => deleteTask(task.id).then(loadTasks)}>
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </tbody>
+              </table>
+            )}
+          </Droppable>
+        </DragDropContext>
       )}
     </div>
   );

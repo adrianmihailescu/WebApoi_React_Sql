@@ -8,6 +8,7 @@ import {
 
 import type Task from "../interfaces/Task";
 import TaskForm from "../components/TaskForm";
+import TaskRow from "../components/TaskRow";
 
 import {
   DragDropContext,
@@ -119,37 +120,13 @@ export default function TasksPage() {
                       index={index}
                     >
                       {(provided: DraggableProvided, snapshot) => (
-                        <tr
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            background: snapshot.isDragging ? "#f0f0f0" : "white",
-                          }}
-                        >
-                          <td>☰</td>
-                          <td>{index + 1}</td>
-                          <td>{task.title}</td>
-                          <td>{task.description}</td>
-                          <td>
-                            <input
-                              type="checkbox"
-                              checked={task.isCompleted}
-                              onChange={() =>
-                                updateTask({
-                                  ...task,
-                                  isCompleted: !task.isCompleted,
-                                }).then(loadTasks)
-                              }
-                            />
-                          </td>
-                          <td>
-                            <button onClick={() => deleteTask(task.id).then(loadTasks)}>
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
+                        <TaskRow
+                          task={task}
+                          index={index}
+                          provided={provided}
+                          isDragging={snapshot.isDragging}
+                          onTaskUpdate={loadTasks}
+                        />
                       )}
                     </Draggable>
                   ))}

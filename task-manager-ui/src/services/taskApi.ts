@@ -1,11 +1,19 @@
 import axios from "axios";
+import type Task from "../interfaces/Task";
 
 // const API_URL = "https://localhost:5001/api/tasks";
-const API_URL = "http://localhost:5020/api/tasks";
+// todo fix the problem with https
+// dotnet dev-certs https --clean
+// dotnet dev-certs https --trust
+// const API_URL = "http://localhost:5020/api/tasks";
+const api = axios.create({
+  baseURL: "http://localhost:5020/api"
+});
 
-export const getTasks = () => axios.get(API_URL);
-export const createTask = (task: any) => axios.post(API_URL, task);
-export const updateTask = (id: number, task: any) =>
-  axios.put(`${API_URL}/${id}`, task);
+export const getTasks = () => api.get<Task[]>("/tasks");
+export const createTask = (task: Omit<Task, "id">) =>
+  api.post("/tasks", task);
+export const updateTask = (task: Task) =>
+  api.put(`/tasks/${task.id}`, task);
 export const deleteTask = (id: number) =>
-  axios.delete(`${API_URL}/${id}`);
+  api.delete(`/tasks/${id}`);

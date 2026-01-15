@@ -1,10 +1,10 @@
-import TaskList from "./pages/TaskList";
+import TasksPage from "./pages/TaskPage";
 
 export default function App() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Task Management System</h1>
-      <TaskList />
+      <TasksPage />
     </div>
   );
 }

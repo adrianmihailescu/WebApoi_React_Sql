@@ -1,0 +1,29 @@
+.pager {
+          margin-top: 20px;
+          display: flex;
+          gap: 5px;
+        }
+
+        .pager button {
+          padding: 5px 10px;
+          border: 1px solid #4caf50;
+          background-color: white;
+          cursor: pointer;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+        }
+
+        .pager button:hover:not(:disabled) {
+          background-color: #4caf50;
+          color: white;
+        }
+
+        .pager button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .pager button.active {
+          background-color: #4caf50;
+          color: white;
+        }

@@ -2,6 +2,7 @@
 * .net 10
 * React .js
 * Axios
+* JWT
 * Drag & drop
 * Sqlite for storage
 * Unit tests

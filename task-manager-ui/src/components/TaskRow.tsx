@@ -1,5 +1,3 @@
-import type { DraggableProvided } from "@hello-pangea/dnd";
-import type Task from "../interfaces/Task";
 import { updateTask, deleteTask } from "../services/taskApi";
 import type { TaskRowProps } from "../interfaces/TaskRowProps";
 

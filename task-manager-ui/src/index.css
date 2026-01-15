@@ -126,3 +126,9 @@ button:active {
 .actions .danger:hover {
   background: #fecaca;
 }
+
+/* Hide default checkbox but keep it clickable */
+input[type="checkbox"] {
+  cursor: pointer;
+}
+

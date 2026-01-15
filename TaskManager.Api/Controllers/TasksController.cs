@@ -25,6 +25,9 @@ public class TasksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateTask(TaskItem task)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var maxOrder = await _context.Tasks.MaxAsync(t => (int?)t.Order) ?? -1;
         task.Order = maxOrder + 1;
 
@@ -36,6 +39,13 @@ public class TasksController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTask(int id, TaskItem updated)
     {
+        // ensure that the user updates the same TaskItem and it's valid
+        if (id != updated.Id)
+            return BadRequest("ID mismatch");        
+        
+        if (!ModelState.IsValid)
+        return BadRequest(ModelState);
+
         var task = await _context.Tasks.FindAsync(id);
         if (task == null) return NotFound();
 

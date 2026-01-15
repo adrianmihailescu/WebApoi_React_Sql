@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Use globalThis as a safe way to access process
+const CI = typeof process !== 'undefined' ? process.env.CI : undefined;
+
 export default defineConfig({
   testDir: './src/tests',
   fullyParallel: true,

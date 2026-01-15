@@ -5,13 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace TaskManager.Api.Services;
 
-public interface IAuthService
-{
-    string HashPassword(string password);
-    bool VerifyPassword(string password, string hash);
-    string GenerateJwtToken(int userId, string email);
-}
-
 public class AuthService : IAuthService
 {
     private readonly IConfiguration _configuration;

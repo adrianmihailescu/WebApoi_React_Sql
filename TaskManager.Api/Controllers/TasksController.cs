@@ -49,10 +49,11 @@ public class TasksController : ControllerBase
             return BadRequest("ID mismatch");        
         
         if (!ModelState.IsValid)
-        return BadRequest(ModelState);
+            return BadRequest(ModelState);
 
         var task = await _context.Tasks.FindAsync(id);
-        if (task == null) return NotFound();
+        if (task == null)
+            return NotFound();
 
         task.Title = updated.Title;
         task.Description = updated.Description;

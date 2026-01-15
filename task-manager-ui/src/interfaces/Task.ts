@@ -5,5 +5,5 @@ export default interface Task {
   title: string;
   description?: string;
   isCompleted: boolean;
-  provided: DraggableProvided;
+  provided?: DraggableProvided;
 }

@@ -4,6 +4,7 @@ test.describe('Task Manager', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the app before each test
     await page.goto('/');
+    
     // Wait for the page to load
     await page.waitForLoadState('networkidle');
   });
@@ -60,7 +61,7 @@ test.describe('Task Manager', () => {
       const searchInput = page.locator('input[placeholder*="Search"]');
       
       // Search for something that won't exist
-      await searchInput.fill('NONEXISTENT_TASK_12345');
+      await searchInput.fill('NONEXISTENT_TASK');
 
       // Should see the no matching tasks message
       const noTasksMessage = page.locator('text=/No matching tasks/i');

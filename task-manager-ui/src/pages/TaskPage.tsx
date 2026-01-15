@@ -74,7 +74,8 @@ export default function TasksPage() {
   };
 
   const onDragEnd = async (result: DropResult) => {
-    if (!result.destination) return;
+    if (!result.destination)
+        return;
 
     const items = Array.from(tasks);
     const [moved] = items.splice(result.source.index, 1);

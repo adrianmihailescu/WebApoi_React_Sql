@@ -7,10 +7,3 @@
 .container {
   width: 100%;
 }
-
-/* Remove demo styles */
-.logo,
-.card,
-.read-the-docs {
-  display: none;
-}

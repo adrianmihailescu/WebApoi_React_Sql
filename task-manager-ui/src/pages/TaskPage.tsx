@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getTasks,
   createTask,
-  updateTask,
-  deleteTask,
+  reorderTasks,
 } from "../services/taskApi";
 
 import type Task from "../interfaces/Task";
@@ -55,16 +54,18 @@ export default function TasksPage() {
     return matchesStatus && matchesSearch;
   });
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
+const onDragEnd = async (result: any) => {
+  if (!result.destination) return;
 
-    const newTasks = Array.from(filteredTasks);
-    const [movedTask] = newTasks.splice(result.source.index, 1);
-    newTasks.splice(result.destination.index, 0, movedTask);
+  const items = Array.from(tasks);
+  const [moved] = items.splice(result.source.index, 1);
+  items.splice(result.destination.index, 0, moved);
 
-    setTasks(newTasks);
-    // TODO: update backend if you want to persist order
-  };
+  setTasks(items);
+
+  // Persist order
+  await reorderTasks(items.map(t => t.id));
+};
 
   return (
     <div className="container">

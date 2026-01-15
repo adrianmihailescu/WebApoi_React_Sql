@@ -18,11 +18,16 @@ public class TasksController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetTasks()
-        => Ok(await _context.Tasks.ToListAsync());
+        => Ok(await _context.Tasks
+        .OrderBy(t => t.Order)
+        .ToListAsync());
 
     [HttpPost]
     public async Task<IActionResult> CreateTask(TaskItem task)
     {
+        var maxOrder = await _context.Tasks.MaxAsync(t => (int?)t.Order) ?? -1;
+        task.Order = maxOrder + 1;
+
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
         return Ok(task);
@@ -52,4 +57,20 @@ public class TasksController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
+    [HttpPut("reorder")]
+    public async Task<IActionResult> ReorderTasks([FromBody] List<int> taskIds)
+    {
+        var tasks = await _context.Tasks.ToListAsync();
+
+        for (int i = 0; i < taskIds.Count; i++)
+        {
+            var task = tasks.First(t => t.Id == taskIds[i]);
+            task.Order = i;
+        }
+
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
 }

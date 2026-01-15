@@ -17,3 +17,5 @@ export const updateTask = (task: Task) =>
   api.put(`/tasks/${task.id}`, task);
 export const deleteTask = (id: number) =>
   api.delete(`/tasks/${id}`);
+export const reorderTasks = (ids: number[]) =>
+  api.put("/tasks/reorder", ids);

@@ -1,7 +1,12 @@
-#.net web api
-.net 10
-React .js
-Axios
-Drag & drop
-Sqlite for storage
-Unit tests (Playwright)
+# .net web api
+* .net 10
+* React .js
+* Axios
+* Drag & drop
+* Sqlite for storage
+* Unit tests
+<img width="979" height="327" alt="image" src="https://github.com/user-attachments/assets/fa0dcc88-96ee-4598-8a20-821d33e8ff8a" />
+<img width="979" height="714" alt="image" src="https://github.com/user-attachments/assets/2bb30e8f-24a8-4d48-bba8-5b9ff4fcbc5c" />
+
+Playwright tests
+<img width="979" height="460" alt="image" src="https://github.com/user-attachments/assets/b7def007-4373-4cbe-9ec7-491bbf978a4d" />
